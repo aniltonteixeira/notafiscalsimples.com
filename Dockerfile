@@ -1,4 +1,4 @@
-# Etapa de build
+# Etapa 1: build
 FROM node:18-alpine AS builder
 
 WORKDIR /app
@@ -8,9 +8,8 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
-# Etapa de produção
+# Etapa 2: produção
 FROM node:18-alpine
-
 WORKDIR /app
 
 COPY --from=builder /app/public ./public
