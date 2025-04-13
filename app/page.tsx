@@ -1,59 +1,105 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { loginUsuario } from "@/lib/auth/loginUsuario";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-export default function Home() {
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErro("");
+
+    const result = await loginUsuario(email, senha);
+
+    if (result.erro) {
+      setErro(result.erro);
+      setLoading(false);
+      return;
+    }
+    // cria o cookie de sessão válido por 1 dia
+    document.cookie = `usuario_tipo=${result.tipo}; path=/; max-age=86400`;
+    
+    if (result.tipo === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="flex flex-col md:flex-row rounded-xl overflow-hidden max-w-4xl w-full">
+        
+        {/* LOGO */}
+        <div className="flex items-center justify-center p-10 mx-auto w-auto max-w-[400px] sm:max-w-[400px] md:max-w-[450px]">
+          <Image
+            src="/logonfs.svg"
+            alt="Nota Fiscal Simples"
+            width={500}
+            height={200}
+            priority
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
 
-      </footer>
+        {/* FORMULÁRIO */}
+        <div className="w-full md:w-1/2 p-6">
+          <Card className="bg-white shadow-lg">
+            <CardHeader className="pb-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#0054A6] text-center font-[var(--font-poppins)]">
+                Acesse sua conta
+              </h2>
+            </CardHeader>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <CardContent className="flex flex-col gap-4">
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="focus-visible:ring-[#88B3DD]"
+                />
+                <Input
+                  type="password"
+                  placeholder="Senha"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  required
+                  className="focus-visible:ring-[#88B3DD]"
+                />
+                {erro && <p className="text-red-600 text-sm mt-1 ml-1 font-medium animate-shake">{erro}</p>}
+              </CardContent>
+
+              <CardFooter>
+                <Button
+                  type="submit"
+                  className="w-full bg-[#0054A6] hover:bg-[#004080] text-white"
+                  disabled={loading}
+                >
+                  {loading ? "Entrando..." : "ENTRAR"}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
