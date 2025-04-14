@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUsuario } from "@/lib/auth/loginUsuario";
+// import { getSupabaseClient } from "@/lib/supabase/supabaseClient";
 import {
   Card,
   CardContent,
   CardHeader,
   CardFooter,
 } from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
