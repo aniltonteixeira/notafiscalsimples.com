@@ -1,5 +1,5 @@
 'use client';
-import Image from "next/image";
+//import Image from "next/image";
 import { Button } from "@/components/ui/button"; // ou seu path correto
 
 export default function Home() {
