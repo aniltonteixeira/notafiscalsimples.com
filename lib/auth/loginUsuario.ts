@@ -6,7 +6,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 🔒 Coloque DENTRO da função ou crie um helper separado
 export async function loginUsuario(email: string, senha: string): Promise<{ erro?: string; tipo?: string }> {
 
 
