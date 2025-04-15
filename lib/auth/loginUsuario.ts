@@ -9,7 +9,8 @@ export async function loginUsuario(email: string, senha: string): Promise<{ erro
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
-  
+  console.log('🔐 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+
   const { data: usuario, error } = await supabase
     .from("usuarios")
     .select("senha_hash, tipo")
