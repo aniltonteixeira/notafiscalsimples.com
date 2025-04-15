@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUsuario } from "@/lib/auth/loginUsuario";
-// import { getSupabaseClient } from "@/lib/supabase/supabaseClient";
 import {
   Card,
   CardContent,
