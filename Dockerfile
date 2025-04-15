@@ -18,9 +18,6 @@ COPY --from=builder /app ./
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install --prod --frozen-lockfile
 
-ENV NODE_ENV=production
-ENV PORT=3000
-
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
