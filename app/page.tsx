@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { loginUsuario } from "@/lib/auth/loginUsuario";
+import { Auth } from "@/lib/supabase/auth";
+import { supabase } from "@/lib/supabase/client";
+
 import {
   Card,
   CardContent,
@@ -21,32 +23,57 @@ export default function LoginPage() {
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const checarSessao = async () => {
+      const sessao = await Auth.verificarSessao();
+      if (!sessao) return;
+
+      const usuario = await Auth.getUsuarioAtual();
+      if (usuario?.email) {
+        const { data } = await supabase
+          .from("usuarios")
+          .select("tipo")
+          .eq("email", usuario.email)
+          .single();
+
+        if (data?.tipo === "admin") {
+          router.replace("/admin");
+        } else if (data?.tipo === "empresa") {
+          router.replace("/dashboard");
+        }
+      }
+    };
+
+    checarSessao();
+  }, [router]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErro("");
 
-    const result = await loginUsuario(email, senha);
+    const result = await Auth.login(email, senha);
 
     if (result.erro) {
       setErro(result.erro);
       setLoading(false);
       return;
     }
-    // cria o cookie de sessão válido por 1 dia
-    document.cookie = `usuario_tipo=${result.tipo}; path=/; max-age=86400`;
-    
+
     if (result.tipo === "admin") {
       router.push("/admin");
-    } else {
+    } else if (result.tipo === "empresa") {
       router.push("/dashboard");
+    } else {
+      setErro("Tipo de usuário não reconhecido.");
     }
+
+    setLoading(false);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="flex flex-col md:flex-row rounded-xl overflow-hidden max-w-4xl w-full">
-        
         {/* LOGO */}
         <div className="flex items-center justify-center p-10 mx-auto w-auto max-w-[400px] sm:max-w-[400px] md:max-w-[450px]">
           <Image
@@ -85,7 +112,11 @@ export default function LoginPage() {
                   required
                   className="focus-visible:ring-[#88B3DD]"
                 />
-                {erro && <p className="text-red-600 text-sm mt-1 ml-1 font-medium animate-shake">{erro}</p>}
+                {erro && (
+                  <p className="text-red-600 text-sm mt-1 ml-1 font-medium animate-shake">
+                    {erro}
+                  </p>
+                )}
               </CardContent>
 
               <CardFooter>
