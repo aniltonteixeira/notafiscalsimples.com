@@ -1,31 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
-import bcrypt from "bcryptjs";
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
+export async function loginUsuario(email: string, senha: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password: senha,
+  });
 
-export async function loginUsuario(email: string, senha: string): Promise<{ erro?: string; tipo?: string }> {
+  if (error || !data.session) {
+    return { erro: "Credenciais inválidas." };
+  }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  console.log('🔐 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const { user } = data;
 
-  const { data: usuario, error } = await supabase
+  const { data: usuario } = await supabase
     .from("usuarios")
-    .select("senha_hash, tipo")
-    .eq("email", email)
+    .select("tipo")
+    .eq("email", user.email)
     .single();
 
-  if (error || !usuario) {
-    return { erro: "Usuário não encontrado." };
-  }
-
-  const senhaCorreta = await bcrypt.compare(senha, usuario.senha_hash);
-
-  if (!senhaCorreta) {
-    return { erro: "Senha incorreta." };
-  }
-
-  return { tipo: usuario.tipo };
+  return { tipo: usuario?.tipo ?? "comum" };
 }
