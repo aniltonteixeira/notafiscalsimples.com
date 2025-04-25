@@ -11,7 +11,6 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
   IconReport,
   IconSearch,
@@ -25,7 +24,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -154,12 +152,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const router = useRouter();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
-  };
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
