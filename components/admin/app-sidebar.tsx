@@ -20,10 +20,7 @@ import {
 } from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button";
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/admin/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import Image from "next/image";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
