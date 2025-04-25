@@ -30,7 +30,7 @@ export default function LoginPage() {
       const usuario = await Auth.getUsuarioAtual();
       if (!usuario?.email) return;
 
-      const { tipo } = await Auth.login(usuario.nivel_acesso_id, "__autologin__"); // ignora senha só para pegar o tipo
+      const { tipo } = await Auth.login(usuario.email, "__autologin__"); // ignora senha só para pegar o tipo
 
       if (tipo === 1) {
         router.replace("/admin");
