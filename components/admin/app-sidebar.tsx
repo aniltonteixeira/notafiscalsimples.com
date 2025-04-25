@@ -19,10 +19,16 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 
+import { Button } from "@/components/ui/button";
 import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
+import { NavMain } from "@/components/admin/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
+import Image from "next/image";
+import Link from "next/link";
+import { LogOut } from "lucide-react";
+import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -33,16 +39,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/admin",
       icon: IconDashboard,
     },
     {
@@ -151,6 +157,12 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -158,23 +170,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:!h-14 data-[slot=sidebar-menu-button]:!px-2"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+            <Link href="/admin">
+              <Image src="/logonfs.svg" alt="Logo" width={180} height={40} />
+            </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavDocuments items={data.documents} /> */}
+        {/*<NavSecondary items={data.navSecondary} className="mt-auto" />*/}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {/* <NavUser user={data.user} /> */}
+        <div className="p-4 border-t">
+            <Button 
+              variant="ghost"
+              className="cursor-pointer w-full justify-start gap-2 text-red-700 hover:bg-red-400 text-white-700"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                document.cookie = "usuario_tipo=; path=/; max-age=0";
+                window.location.href = "/";
+              }}
+            >
+
+              <LogOut size={18} /> Sair
+            </Button>
+          </div>
       </SidebarFooter>
     </Sidebar>
   )

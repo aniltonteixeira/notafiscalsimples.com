@@ -137,11 +137,11 @@ function DragHandle({ id }: { id: number }) {
 }
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
-  {
-    id: "drag",
-    header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original.id} />,
-  },
+  // {
+  //   id: "drag",
+  //   header: () => null,
+  //   cell: ({ row }) => <DragHandle id={row.original.id} />,
+  // },
   {
     id: "select",
     header: ({ table }) => (
