@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Auth } from "@/lib/supabase/auth";
-import { supabase } from "@/lib/supabase/client";
 
 import {
   Card,
@@ -29,18 +28,14 @@ export default function LoginPage() {
       if (!sessao) return;
 
       const usuario = await Auth.getUsuarioAtual();
-      if (usuario?.email) {
-        const { data } = await supabase
-          .from("usuarios")
-          .select("tipo")
-          .eq("email", usuario.email)
-          .single();
+      if (!usuario?.email) return;
 
-        if (data?.tipo === "admin") {
-          router.replace("/admin");
-        } else if (data?.tipo === "empresa") {
-          router.replace("/dashboard");
-        }
+      const { tipo } = await Auth.login(usuario.nivel_acesso_id, "__autologin__"); // ignora senha só para pegar o tipo
+
+      if (tipo === 1) {
+        router.replace("/admin");
+      } else if (tipo === "empresa") {
+        router.replace("/dashboard");
       }
     };
 
@@ -60,7 +55,7 @@ export default function LoginPage() {
       return;
     }
 
-    if (result.tipo === "admin") {
+    if (result.tipo === 1) {
       router.push("/admin");
     } else if (result.tipo === "empresa") {
       router.push("/dashboard");

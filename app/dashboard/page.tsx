@@ -1,75 +1,40 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { createClient } from "@supabase/supabase-js";
-import Image from "next/image";
-import Link from "next/link";
+import { AppSidebar } from "@/components/app-sidebar"
+import { ChartAreaInteractive } from "@/components/chart-area-interactive"
+import { DataTable } from "@/components/data-table"
+import { SectionCards } from "@/components/section-cards"
+import { SiteHeader } from "@/components/site-header"
 import {
-  Building2,
-  Users2,
-  FileText,
-  LogOut,
-  Menu,
-  X,
-} from "lucide-react";
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import data from "./data.json"
 
-export default function Home() {
-  const [nome, setNome] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [menuAberto, setMenuAberto] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    const verificarSessao = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
-
-      if (error || !user) {
-        router.push("/"); // Redireciona para login se não autenticado
-        return;
-      }
-
-      const { data: usuario } = await supabase
-        .from("usuarios")
-        .select("nome")
-        .eq("email", user.email)
-        .single();
-
-      setNome(usuario?.nome);
-      setLoading(false);
-    };
-
-    verificarSessao();
-  }, [router]);
-
-  if (loading) {
-    return <p className="p-6">Carregando...</p>;
-  }
+export default function Page() {
   return (
-    <>
-      <div className="">DASHBOARD</div>
-
-      <div>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            document.cookie = "usuario_tipo=; path=/; max-age=0";
-            window.location.href = "/";
-          }}
-        >
-          Sair
-        </Button>
-      </div>
-    </>
-  );
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              <SectionCards />
+              <div className="px-4 lg:px-6">
+                <ChartAreaInteractive />
+              </div>
+              <DataTable data={data} />
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }
