@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 30, "column": 0}, "map": {"version":3,"sources":["file://C%3A/Projetos/notafiscalsimples.com/app/admin/page.tsx"],"sourcesContent":["export default function Page() {\n  return (<>ola mundo</>);\n}"],"names":[],"mappings":";;;;;AAAe,SAAS;IACtB,qBAAQ;kBAAE;;AACZ","debugId":null}}]
-}
