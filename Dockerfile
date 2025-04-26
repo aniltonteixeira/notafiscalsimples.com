@@ -48,4 +48,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Comando para iniciar o app
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
