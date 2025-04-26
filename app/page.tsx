@@ -17,7 +17,7 @@ export default function UsuariosPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Lista de Usuários: Novo</h1>
+      <h1 className="text-2xl font-bold mb-4">Lista de Usuários: Teste</h1>
       <div className="space-y-2">
         {usuarios.map((usuario) => (
           <div key={usuario.id} className="p-4 bg-gray-100 rounded shadow">
