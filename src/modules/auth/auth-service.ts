@@ -1,10 +1,10 @@
 // src/modules/auth/auth-service.ts
-import { supabase } from "@/lib/supabase/client";
+import { AuthRepository } from "./auth-repository";
 
-export async function login(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    throw new Error(error.message);
+export class AuthService {
+  constructor(private authRepository: AuthRepository) {}
+
+  async login(email: string, password: string) {
+    await this.authRepository.login(email, password);
   }
-  return data;
 }
