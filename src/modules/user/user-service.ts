@@ -1,6 +1,6 @@
 // src/modules/user/user-service.ts
 import { UserRepository, User } from "./user-repository";
-import { ValidationError } from "@/errors/validation-error"; // Importamos o erro aqui
+import { ValidationError } from "@/errors/validation-error"; 
 
 export class UserService {
   constructor(private userRepository: UserRepository) {}
