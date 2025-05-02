@@ -3,7 +3,7 @@ export interface User {
     id?: string;
     nome: string;
     email: string;
-    senha: string;  // aqui ainda vai ser a senha normal, que vamos hashear antes
+    senha: string;  
     nivelAcessoId?: number;
     telefone?: string;
     ativo?: boolean;
