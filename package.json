@@ -12,9 +12,11 @@
     "node": "20.0.0"
   },
   "dependencies": {
+    "@supabase/auth-helpers-shared": "^0.7.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
     "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
     "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
