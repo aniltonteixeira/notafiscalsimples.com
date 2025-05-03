@@ -23,6 +23,9 @@ export default function LoginPage() {
       });
 
       if (error || !data.session) {
+        if (error?.message === "Invalid login credentials") {
+          throw new Error("Email ou senha incorretos.");
+        }
         throw new Error(error?.message || "Falha no login");
       }
 
@@ -38,9 +41,9 @@ export default function LoginPage() {
       }
 
       // Redirecionar conforme o nível de acesso
-      if (userData.nivel_acesso_id === 1) {
+      if ([1, 2].includes(userData.nivel_acesso_id)) {
         router.push("/admin");
-      } else if (userData.nivel_acesso_id === 2) {
+      } else if ([3, 4].includes(userData.nivel_acesso_id)) {
         router.push("/dashboard");
       } else {
         throw new Error("Nível de acesso inválido");
